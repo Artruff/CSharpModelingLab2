@@ -27,11 +27,14 @@ namespace CSharpModelingLab2.Classes
             _dump.Loading += Rided;
             _dump.Wait += Waitied;
         }
+
+        public string name => _name;
+
         public string[] GetStatistic()
         {
             string[] result = new string[6];
 
-            result[0] = "Данные по самосвалу - " + _name;
+            result[0] = "Данные по самосвалу - " + _name+" с грузоподъёмностью "+ _dump.weight;
             result[1] = "Перевезено всего: " + _weightTotal;
             result[2] = "Всего время на загрузку: " + _loadingTotal + ", за " + _loadCount + " раз, в среднем: " + _loadingTotal / _loadCount;
             result[3] = "Всего время на выгрузку: " + _shipmentTotal + ", за " + _shipmentCount + " раз, в среднем: " + _shipmentTotal / _shipmentCount;

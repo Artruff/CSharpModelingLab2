@@ -1,7 +1,7 @@
 ﻿
 namespace CSharpModelingLab2
 {
-    partial class MainWindow
+    partial class Quarrr
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -60,6 +60,7 @@ namespace CSharpModelingLab2
             this.CountTexBox = new System.Windows.Forms.TextBox();
             this.GlobalTimeLabel = new System.Windows.Forms.Label();
             this.GlobalTime = new System.Windows.Forms.Label();
+            this.statButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.FirstExDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SecondExDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ThirdExDataGridView)).BeginInit();
@@ -67,7 +68,7 @@ namespace CSharpModelingLab2
             // 
             // TestButton
             // 
-            this.TestButton.Location = new System.Drawing.Point(911, 461);
+            this.TestButton.Location = new System.Drawing.Point(1148, 461);
             this.TestButton.Name = "TestButton";
             this.TestButton.Size = new System.Drawing.Size(75, 23);
             this.TestButton.TabIndex = 0;
@@ -242,7 +243,7 @@ namespace CSharpModelingLab2
             this.LogBox.FormattingEnabled = true;
             this.LogBox.Location = new System.Drawing.Point(676, 28);
             this.LogBox.Name = "LogBox";
-            this.LogBox.Size = new System.Drawing.Size(310, 290);
+            this.LogBox.Size = new System.Drawing.Size(547, 290);
             this.LogBox.TabIndex = 7;
             // 
             // TickButton
@@ -263,6 +264,7 @@ namespace CSharpModelingLab2
             this.button1.TabIndex = 9;
             this.button1.Text = "Start";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // CountTexBox
             // 
@@ -290,11 +292,22 @@ namespace CSharpModelingLab2
             this.GlobalTime.TabIndex = 12;
             this.GlobalTime.Text = "0";
             // 
-            // MainWindow
+            // statButton
+            // 
+            this.statButton.Location = new System.Drawing.Point(986, 382);
+            this.statButton.Name = "statButton";
+            this.statButton.Size = new System.Drawing.Size(75, 23);
+            this.statButton.TabIndex = 13;
+            this.statButton.Text = "Get stat";
+            this.statButton.UseVisualStyleBackColor = true;
+            this.statButton.Click += new System.EventHandler(this.statButton_Click);
+            // 
+            // Quarrr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(998, 491);
+            this.ClientSize = new System.Drawing.Size(1235, 491);
+            this.Controls.Add(this.statButton);
             this.Controls.Add(this.GlobalTime);
             this.Controls.Add(this.GlobalTimeLabel);
             this.Controls.Add(this.CountTexBox);
@@ -308,7 +321,7 @@ namespace CSharpModelingLab2
             this.Controls.Add(this.label1);
             this.Controls.Add(this.FirstExDataGridView);
             this.Controls.Add(this.TestButton);
-            this.Name = "MainWindow";
+            //this.Name = "Quarrr";
             this.Text = "Quarry";
             ((System.ComponentModel.ISupportInitialize)(this.FirstExDataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SecondExDataGridView)).EndInit();
@@ -351,6 +364,7 @@ namespace CSharpModelingLab2
         private System.Windows.Forms.TextBox CountTexBox;
         private System.Windows.Forms.Label GlobalTimeLabel;
         private System.Windows.Forms.Label GlobalTime;
+        private System.Windows.Forms.Button statButton;
     }
 }
 

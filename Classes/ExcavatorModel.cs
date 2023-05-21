@@ -16,21 +16,31 @@ namespace CSharpModelingLab2.Classes
 
         public event ModelAction NewAction;
         public event ModelAction Plain;
+        public event ModelAdded CarArrived;
 
-        public ExcavatorModel(ExcavatorStatisticCreator excavatorStatisticCreator, QuarryModel quarry)
+        public ExcavatorModel(string name, QuarryModel quarry)
         {
             _quarryModel = quarry;
             _modelingCars = new List<IModelingCar>();
-            _excavatorStatisticCreator = excavatorStatisticCreator;
+            _excavatorStatisticCreator = new ExcavatorStatisticCreator(name, this);
             _timeLoading = 0;
         }
 
         List<IModelingCar> modelingCars { get => _modelingCars; }
         public IStatiscticCreater statiscticCreater => _excavatorStatisticCreator;
 
-        public string GetInfo()
+        public string[] GetInfo()
         {
-            throw new NotImplementedException();
+            List<string> info = new List<string>(_excavatorStatisticCreator.GetStatistic());
+            info.Add("");
+
+            foreach (IModelingCar model in _modelingCars)
+            {
+                info.AddRange(model.GetInfo());
+                info.Add("");
+            }
+
+            return info.ToArray();
         }
 
         public void TimeStep(double time)
@@ -56,6 +66,7 @@ namespace CSharpModelingLab2.Classes
         public void AddCar(IModelingCar car)
         {
             _modelingCars.Add(car);
+            CarArrived(car);
             if (_modelingCars.Count == 1)
             {
                 _timeLoading = car.NextAction();

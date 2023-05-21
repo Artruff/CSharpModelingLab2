@@ -11,11 +11,11 @@ using CSharpModelingLab2.Classes;
 
 namespace CSharpModelingLab2
 {
-    public partial class MainWindow : Form
+    public partial class Quarrr : Form
     {
         WorldModel world;
         QuarryModel quarry;
-        public MainWindow()
+        public Quarrr()
         {
             InitializeComponent();
         }
@@ -24,13 +24,13 @@ namespace CSharpModelingLab2
         {
             DumpTrackModel track = new DumpTrackModel(20, 1.5, 2.5, 5, 2, "1");
 
-            QuarryModel quarry = new QuarryModel(new QuarryStatisticCreator());
+            QuarryModel quarry = new QuarryModel("1");
 
-            ExcavatorModel excavator1 = new ExcavatorModel(new ExcavatorStatisticCreator(), quarry);
-            ExcavatorModel excavator2 = new ExcavatorModel(new ExcavatorStatisticCreator(), quarry);
-            ExcavatorModel excavator3 = new ExcavatorModel(new ExcavatorStatisticCreator(), quarry);
+            ExcavatorModel excavator1 = new ExcavatorModel("1", quarry);
+            ExcavatorModel excavator2 = new ExcavatorModel("2", quarry);
+            ExcavatorModel excavator3 = new ExcavatorModel("3", quarry);
 
-            WorldModel worldModel = new WorldModel(new WorldStatisticCreator());
+            WorldModel worldModel = new WorldModel("1");
             worldModel.AddPlace(excavator1);
             //worldModel.AddPlace(excavator2);
             //worldModel.AddPlace(excavator3);
@@ -49,22 +49,83 @@ namespace CSharpModelingLab2
         {
             if (world == null)
                 InitWorld();
+            world.Tick();
         }
         private void InitWorld()
         {
-            world = new WorldModel(new WorldStatisticCreator());
+            world = new WorldModel("моделируемый мир");
 
-            AddExcToWorld(FirstExDataGridView);
-            AddExcToWorld(SecondExDataGridView);
-            AddExcToWorld(ThirdExDataGridView);
+            world.NewAction += delegate (double time)
+            {
+                GlobalTime.Text = world.globalTime.ToString();
+            };
+
+            quarry = new QuarryModel("главный");
+            world.AddPlace(quarry);
+            quarry.CarArrived += delegate (Interfaces.IModelingCar car)
+            {
+                LogBox.Items.Add(GlobalTime.Text + ":" + car.statiscticCreater.name + " прибыл к карьеру " + quarry.statiscticCreater.name);
+            };
+
+            AddExcToWorld("первый", FirstExDataGridView);
+            AddExcToWorld("второй", SecondExDataGridView);
+            AddExcToWorld("третий", ThirdExDataGridView);
         }
 
-        private void AddExcToWorld(DataGridView dataGridView)
+        private void AddExcToWorld(string name, DataGridView dataGridView)
         {
-            for(int i = 0; i< dataGridView.Rows.Count; i++)
+            ExcavatorModel excavator = new ExcavatorModel(name, quarry);
+
+            world.AddPlace(excavator);
+            double weight, toExc, toQua, load, upload;
+            string nameTrack;
+            for (int i = 0; i< dataGridView.Rows.Count-1; i++)
             {
+                nameTrack = dataGridView[0, i].Value.ToString();
+                weight = Convert.ToDouble(dataGridView[1, i].Value.ToString());
+                toExc = Convert.ToDouble(dataGridView[2, i].Value.ToString());
+                toQua = Convert.ToDouble(dataGridView[3, i].Value.ToString());
+                load = Convert.ToDouble(dataGridView[4, i].Value.ToString());
+                upload = Convert.ToDouble(dataGridView[5, i].Value.ToString());
+                DumpTrackModel track = new DumpTrackModel(weight, toExc, toQua, load, upload, nameTrack);
+
+                excavator.AddCar(track);
+                track.Loading += delegate (double time) { LogBox.Items.Add(GlobalTime.Text + ":" + nameTrack + " загрузится через " + time); };
+                track.Ride += delegate (double time) 
+                {
+                    if (track.status == Interfaces.StatusCar.GoesToQuarry)
+                    {
+                        LogBox.Items.Add(GlobalTime.Text + ":" + nameTrack + " доедет до карьера через " + time);
+                    }
+                    else
+                    {
+                        LogBox.Items.Add(GlobalTime.Text + ":" + nameTrack + " доедет до экскаватора через " + time);
+                    }
+                };
+                track.Shipment += delegate (double time) { LogBox.Items.Add(GlobalTime.Text + ":" + nameTrack + " разгрузится через " + time); };
 
             }
+
+            excavator.CarArrived += delegate (Interfaces.IModelingCar car)
+            {
+                LogBox.Items.Add(GlobalTime.Text + ":" + car.statiscticCreater.name + " прибыл к экскаватору " + excavator.statiscticCreater.name);
+            };
+        }
+
+        private void statButton_Click(object sender, EventArgs e)
+        {
+            var info = world.GetInfo();
+
+            foreach (string inf in info)
+                LogBox.Items.Add(inf);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (world == null)
+                InitWorld();
+            while (world.globalTime < Convert.ToDouble(CountTexBox.Text))
+                world.Tick();
         }
     }
 }

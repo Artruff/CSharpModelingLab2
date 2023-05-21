@@ -16,9 +16,9 @@ namespace CSharpModelingLab2.Classes
 
         public event ModelAction NewAction;
 
-        public WorldModel(WorldStatisticCreator statiscticCreater)
+        public WorldModel(string name)
         {
-            _statiscticCreater = statiscticCreater;
+            _statiscticCreater = new WorldStatisticCreator(name, this);
             _modelingPlaces = new List<IPlaceModel>();
         }
         public IStatiscticCreater statiscticCreater => _statiscticCreater;
@@ -32,9 +32,18 @@ namespace CSharpModelingLab2.Classes
             TimeStep(time);
         }
         public double globalTime { get => _globalTime; }
-        public string GetInfo()
+        public string[] GetInfo()
         {
-            throw new NotImplementedException();
+            List<string> info = new List<string>(_statiscticCreater.GetStatistic());
+            info.Add("");
+
+            foreach(IPlaceModel modelPlace in _modelingPlaces)
+            {
+                info.AddRange(modelPlace.GetInfo());
+                info.Add("");
+            }
+
+            return info.ToArray();
         }
 
         public void TimeStep(double time)
@@ -55,12 +64,13 @@ namespace CSharpModelingLab2.Classes
             _modelingPlaces.Add(place);
             place.NewAction += AddNewTime;
         }
+
         private void AddNewTime(double time)
         {
             _timeLaps.Add(time);
             _timeLaps.Sort();
             if(NewAction != null)
-            NewAction(time);
+                NewAction(time);
         }
     }
 }

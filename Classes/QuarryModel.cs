@@ -10,19 +10,30 @@ namespace CSharpModelingLab2.Classes
     class QuarryModel : IPlaceModel
     {
         QuarryStatisticCreator _quarryStatisticCreator;
-        public QuarryModel(QuarryStatisticCreator quarryStatisticCreator)
+        public QuarryModel(string name)
         {
-            _quarryStatisticCreator = quarryStatisticCreator;
+            _quarryStatisticCreator = new QuarryStatisticCreator(name, this);
             _carList = new List<(ExcavatorModel excavator, IModelingCar car, double time)>();
         }
         List<(ExcavatorModel excavator, IModelingCar car, double time)> _carList = new List<(ExcavatorModel excavator, IModelingCar car, double time)>();
-        public IStatiscticCreater statiscticCreater => throw new NotImplementedException();
+        public IStatiscticCreater statiscticCreater => _quarryStatisticCreator;
 
         public event ModelAction NewAction;
+        public event ModelAction Plain;
+        public event ModelAdded CarArrived;
 
-        public string GetInfo()
+        public string[] GetInfo()
         {
-            throw new NotImplementedException();
+            List<string> info = new List<string>(_quarryStatisticCreator.GetStatistic());
+            info.Add("");
+
+            foreach (var model in _carList)
+            {
+                info.AddRange(model.car.GetInfo());
+                info.Add("");
+            }
+
+            return info.ToArray();
         }
 
         public void TimeStep(double time)
@@ -30,7 +41,7 @@ namespace CSharpModelingLab2.Classes
             for (int i = 0; i < _carList.Count; i++)
             {
                 _carList[i] = (_carList[i].excavator, _carList[i].car, _carList[i].time - time);
-                if(_carList[i].time<= 0 )
+                if (_carList[i].time <= 0)
                 {
                     if (_carList[i].car.status == StatusCar.GoesToExcavator)
                     {
@@ -40,14 +51,17 @@ namespace CSharpModelingLab2.Classes
                     else
                     {
                         _carList[i] = (_carList[i].excavator, _carList[i].car, _carList[i].car.NextAction());
-                        if(NewAction != null)
+                        if (NewAction != null)
                             NewAction(_carList[i].time);
                     }
                 }
+                else
+                    Plain(time);
             }
         }
         public void AddCar(ExcavatorModel excavator, IModelingCar car)
         {
+            CarArrived(car);
             double time = car.NextAction();
             _carList.Add((excavator, car, time)); 
             if (NewAction != null)

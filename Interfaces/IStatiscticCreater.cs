@@ -8,6 +8,7 @@ namespace CSharpModelingLab2.Interfaces
 {
     interface IStatiscticCreater
     {
+        string name { get; }
         string[] GetStatistic();
     }
 }

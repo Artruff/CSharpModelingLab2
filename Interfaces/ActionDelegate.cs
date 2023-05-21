@@ -7,4 +7,5 @@ using System.Threading.Tasks;
 namespace CSharpModelingLab2.Interfaces
 {
     delegate void ModelAction(double time);
+    delegate void ModelAdded(IModelingCar obj);
 }

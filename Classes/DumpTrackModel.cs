@@ -34,10 +34,10 @@ namespace CSharpModelingLab2.Classes
         public event ModelAction Ride;
         public event ModelAction Wait;
 
-        public double weight { get => weight; }
-        public string GetInfo()
+        public double weight { get => _weight; }
+        public string[] GetInfo()
         {
-            throw new NotImplementedException();
+            return _dumpTrackStatisticCreator.GetStatistic();
         }
 
         public double NextAction()
