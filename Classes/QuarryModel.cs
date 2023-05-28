@@ -38,6 +38,7 @@ namespace CSharpModelingLab2.Classes
 
         public void TimeStep(double time)
         {
+            bool wasEvent = false;
             for (int i = 0; i < _carList.Count; i++)
             {
                 _carList[i] = (_carList[i].excavator, _carList[i].car, _carList[i].time - time);
@@ -51,13 +52,15 @@ namespace CSharpModelingLab2.Classes
                     else
                     {
                         _carList[i] = (_carList[i].excavator, _carList[i].car, _carList[i].car.NextAction());
+                        wasEvent = true;
                         if (NewAction != null)
                             NewAction(_carList[i].time);
                     }
                 }
-                else
-                    Plain(time);
             }
+
+            if (!wasEvent)
+                Plain(time);
         }
         public void AddCar(ExcavatorModel excavator, IModelingCar car)
         {

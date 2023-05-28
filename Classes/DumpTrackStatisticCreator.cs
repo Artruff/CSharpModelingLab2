@@ -67,9 +67,8 @@ namespace CSharpModelingLab2.Classes
         }
         private void Waitied(double time)
         {
-            _waitingTotal += _prevTime;
+            _waitingTotal += time;
             _waitingCount++;
-            _prevTime = time;
         }
     }
 }

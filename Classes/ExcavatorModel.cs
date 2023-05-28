@@ -58,6 +58,8 @@ namespace CSharpModelingLab2.Classes
                         double timeAction = _modelingCars.First().NextAction();
                         NewAction(timeAction);
                     }
+                    for (int i = 1; i < _modelingCars.Count; i++)
+                        _modelingCars[i].Waiting(time);
                 }
                 else if(Plain!=null)
                     Plain(time);
