@@ -19,6 +19,8 @@ namespace CSharpModelingLab2.Classes
         public IStatiscticCreater statiscticCreater => _quarryStatisticCreator;
 
         public event ModelAction NewAction;
+        public event ModelAction GoBack;
+        public event ModelAction Shipmenting;
         public event ModelAction Plain;
         public event ModelAdded CarArrived;
 
@@ -53,8 +55,18 @@ namespace CSharpModelingLab2.Classes
                     {
                         _carList[i] = (_carList[i].excavator, _carList[i].car, _carList[i].car.NextAction());
                         wasEvent = true;
+
                         if (NewAction != null)
                             NewAction(_carList[i].time);
+
+                        if (_carList[i].car.status == StatusCar.Shipmenting)
+                        {
+                            if (Shipmenting != null)
+                                Shipmenting(_carList[i].time);
+                        }
+                        else if (_carList[i].car.status == StatusCar.GoesToExcavator)
+                            if (GoBack != null)
+                                GoBack(_carList[i].time);
                     }
                 }
             }

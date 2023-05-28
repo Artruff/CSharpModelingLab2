@@ -22,7 +22,7 @@ namespace CSharpModelingLab2.Classes
             _plainQuaTotal = _uploadTimeTotal =
                 _carCount = _uploadCount = 0;
             _quarry.Plain += Plain;
-            _quarry.NewAction += Uploaded;
+            _quarry.Shipmenting += Uploaded;
             _quarry.CarArrived += CarArriver;
         }
         public string[] GetStatistic()
